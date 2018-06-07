@@ -4,11 +4,15 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
@@ -25,20 +29,35 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = ""
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)//设置透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)//设置透明导航栏
+        }
+
+        actionBar.setBackgroundDrawable( ColorDrawable(Color.parseColor("#33000000")))
+//google的actionbar是分为上下两栏显示的，上面的代码只能设置顶部actionbar的背景色，
+//为了让下面的背景色一致，还需要添加一行代码：
+        actionBar.setSplitBackgroundDrawable( ColorDrawable(Color.parseColor("#33000000")))
+
+        title = "扫一扫"
         scannerView = ZXingScannerView(this)
         scannerView.setAutoFocus(true)
+        scannerView.setAspectTolerance(0.5f)
+
         setContentView(scannerView)
+
+        actionBar.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (scannerView.flash) {
             val item = menu.add(0,
-                    TOGGLE_FLASH, 0, "Flash Off")
+                    TOGGLE_FLASH, 0, "关闭闪关灯")
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         } else {
             val item = menu.add(0,
-                    TOGGLE_FLASH, 0, "Flash On")
+                    TOGGLE_FLASH, 0, "打开闪光灯")
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
         return super.onCreateOptionsMenu(menu)
@@ -49,6 +68,11 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
             scannerView.flash = !scannerView.flash
             this.invalidateOptionsMenu()
             return true
+        } else if(item.itemId ==  android.R.id.home){
+            val intent = Intent()
+            intent.putExtra("SCAN_RESULT","")
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
         return super.onOptionsItemSelected(item)
     }
