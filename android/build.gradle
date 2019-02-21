@@ -11,7 +11,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.2-4'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.51'
     }
 }
 
@@ -28,8 +28,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -47,6 +47,6 @@ android {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2-4'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.51'
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
 }

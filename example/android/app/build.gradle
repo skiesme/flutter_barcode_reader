@@ -51,5 +51,5 @@ flutter {
 }
 
 dependencies {
-    compile 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2-4'
+    compile 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.51'
 }
